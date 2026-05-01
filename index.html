@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>⚔️ דו־קרב מושגים בגמרא</title>
+<style>
+:root{
+  --bg1:#1b2559;
+  --bg2:#4b2d7f;
+  --panel:rgba(255,255,255,.12);
+  --panel2:rgba(255,255,255,.18);
+  --card:#ffffff;
+  --text:#172033;
+  --muted:#d7defa;
+  --accent:#ffd45a;
+  --accent2:#7ee0b8;
+  --bad:#ff6b6b;
+  --good:#37c97a;
+  --line:rgba(255,255,255,.28);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:Arial,"Noto Sans Hebrew",sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,212,90,.22),transparent 28%),
+    radial-gradient(circle at 80% 20%,rgba(126,224,184,.18),transparent 30%),
+    linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+button{font-family:inherit}
+.screen{
+  min-height:100vh;
+  width:100%;
+  padding:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hidden{display:none!important}
+.shell{
+  width:min(1120px,100%);
+  min-height:calc(100vh - 44px);
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--line);
+  border-radius:28px;
+  box-shadow:0 24px 70px rgba(0,0,0,.22);
+  backdrop-filter:blur(12px);
+  padding:22px;
+}
+.menu-layout{
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:20px;
+  align-items:stretch;
+}
+.hero,.level-card,.play-panel,.result-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:24px;
+}
+.hero{display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  width:max-content;
+  background:rgba(255,212,90,.18);
+  color:#fff4bd;
+  border:1px solid rgba(255,212,90,.35);
+  border-radius:999px;
+  padding:8px 12px;
+  font-weight:700;
+  font-size:14px;
+}
+h1{font-size:clamp(34px,5vw,62px);line-height:1.05;margin:16px 0 12px}
+.subtitle{font-size:clamp(17px,2vw,22px);line-height:1.55;color:var(--muted)}
+.instructions{
+  display:grid;
+  gap:10px;
+  margin-top:18px;
+  color:#fff;
+}
+.tip{
+  background:rgba(0,0,0,.16);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:16px;
+  padding:12px 14px;
+  line-height:1.45;
+}
+.levels{display:grid;gap:14px}
+.level-card{
+  width:100%;
+  text-align:right;
+  color:#fff;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.level-card:hover,.level-card:focus{transform:translateY(-2px);background:var(--panel2);outline:none}
+.level-title{font-size:23px;font-weight:800;margin-bottom:6px}
+.level-meta{color:var(--muted);font-size:15px;line-height:1.45}
+.button{
+  border:0;
+  border-radius:14px;
+  padding:12px 18px;
+  background:var(--accent);
+  color:#201a00;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  transition:.15s ease;
+}
+.button:hover{transform:translateY(-1px)}
+.button.secondary{background:rgba(255,255,255,.15);color:#fff;border:1px solid var(--line);box-shadow:none}
+.game-shell{display:flex;flex-direction:column;gap:14px}
+.topbar{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.stat{
+  background:rgba(255,255,255,.13);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  text-align:center;
+  font-weight:900;
+}
+.stat span{display:block;font-size:22px;margin-top:4px;color:var(--accent)}
+.play-panel{display:flex;flex-direction:column;gap:16px;min-height:calc(100vh - 210px)}
+.round-title{text-align:center;font-size:24px;font-weight:900}
+.help-bubble{
+  background:rgba(255,212,90,.16);
+  border:1px solid rgba(255,212,90,.38);
+  color:#fff6c8;
+  border-radius:18px;
+  padding:12px 16px;
+  text-align:center;
+  line-height:1.45;
+  font-weight:700;
+}
+.board{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  flex:1;
+  align-items:stretch;
+}
+.column{
+  background:rgba(0,0,0,.13);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:22px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.column h2{text-align:center;font-size:18px;color:#fff;margin-bottom:2px}
+.zones,.answers{display:grid;gap:10px;grid-template-columns:1fr}
+.drop-zone,.answer-card{
+  border-radius:18px;
+  min-height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:12px;
+  font-weight:800;
+  line-height:1.35;
+}
+.drop-zone{
+  background:rgba(255,255,255,.10);
+  border:2px dashed rgba(255,255,255,.42);
+  color:#fff;
+  cursor:pointer;
+  position:relative;
+}
+.drop-zone.has-answer{border-style:solid;background:rgba(255,255,255,.18);align-items:stretch;justify-content:flex-start;flex-direction:column}
+.drop-zone .term-label{display:block;font-size:17px;font-weight:900;margin-bottom:10px}
+.drop-zone .placed-answer{
+  display:block;
+  width:100%;
+  margin-top:8px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.22);
+  color:#fff6c8;
+  font-size:14px;
+  font-weight:800;
+  line-height:1.45;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+}
+.drop-zone.selected{outline:3px solid var(--accent);background:rgba(255,212,90,.18)}
+.answer-card{
+  background:var(--card);
+  color:var(--text);
+  border:2px solid transparent;
+  cursor:pointer;
+  user-select:none;
+  box-shadow:0 8px 18px rgba(0,0,0,.13);
+}
+.answer-card:hover,.answer-card.selected{border-color:var(--accent);transform:translateY(-1px)}
+.answer-card.used{opacity:.38;transform:none;cursor:pointer}
+.answer-card.correct{background:var(--good)!important;color:#fff!important;opacity:1}
+.answer-card.incorrect{background:var(--bad)!important;color:#fff!important;opacity:1}
+.feedback{
+  background:rgba(255,255,255,.10);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  max-height:160px;
+  overflow:auto;
+  line-height:1.5;
+}
+.feedback strong{color:var(--accent)}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.result-panel{width:min(680px,100%);text-align:center;margin:auto}
+.result-panel h2{font-size:42px;margin-bottom:16px}
+.result-score{font-size:24px;line-height:1.8;color:var(--muted)}
+.rank{font-size:28px;font-weight:900;color:var(--accent);margin:18px 0}
+@media (max-width:820px){
+  .screen{padding:10px;align-items:stretch;justify-content:flex-start}
+  .shell{min-height:calc(100vh - 20px);border-radius:20px;padding:14px}
+  .menu-layout{grid-template-columns:1fr}
+  .hero,.level-card,.play-panel,.result-panel{border-radius:20px;padding:16px}
+  .topbar{grid-template-columns:repeat(2,1fr)}
+  .board{grid-template-columns:1fr;gap:12px}
+  .play-panel{min-height:auto}
+  .drop-zone,.answer-card{min-height:56px;font-size:14px}
+  .drop-zone .term-label{font-size:15px;margin-bottom:8px}
+  .drop-zone .placed-answer{font-size:13px;padding:9px 10px}
+  .help-bubble{font-size:14px}
+}
+@media (max-width:480px){
+  .topbar{grid-template-columns:1fr 1fr}
+  .stat{padding:10px;font-size:13px}
+  .stat span{font-size:18px}
+  h1{font-size:34px}
+  .level-title{font-size:20px}
+  .round-title{font-size:20px}
+}
+</style>
+
+<meta name="NetsparkQuiltingResult" total-length="18120" removed="0" rules-found="w73,w2655,w3390,w3012,w4748,w4749,w9738,w11982,w342,w21217,w5460,w30581,w21218,w17802,w30329,w2577" />
+</head>
+<body>
+
+<div id="menu" class="screen">
+  <main class="shell menu-layout">
+    <section class="hero">
+      <div>
+        <div class="badge">⚔️ משחק התאמת מושגים</div>
+        <h1>דו־קרב מושגים בגמרא</h1>
+        <p class="subtitle">בחרו רמה, התאימו כל הגדרה למושג הנכון, וצברו ניקוד לפי מספר התשובות הנכונות והזמן שנותר.</p>
+        <div class="instructions">
+          <div class="tip">💡 במחשב אפשר לגרור הגדרות אל המושגים. בפלאפון נוח יותר ללחוץ על הגדרה ואז ללחוץ על המושג המתאים.</div>
+          <div class="tip">🎯 אחרי בדיקה תקבלו סימון נכון/לא נכון, וגם יוצגו התשובות הנכונות.</div>
+          <div class="tip">🏆 מתאים להקרנה כיתתית או למשחק אישי של תלמידים.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="levels" aria-label="בחירת רמה">
+      <button class="level-card" onclick="startGame('easy')">
+        <div class="level-title">🟢 קל</div>
+        <div class="level-meta">2 התאמות בכל סיבוב · 8 סיבובים · 210 שניות</div>
+      </button>
+      <button class="level-card" onclick="startGame('medium')">
+        <div class="level-title">🟡 בינוני</div>
+        <div class="level-meta">3 התאמות בכל סיבוב · 7 סיבובים · 240 שניות</div>
+      </button>
+      <button class="level-card" onclick="startGame('hard')">
+        <div class="level-title">🔴 קשה</div>
+        <div class="level-meta">4 התאמות בכל סיבוב · 6 סיבובים · 300 שניות</div>
+      </button>
+    </section>
+  </main>
+</div>
+
+<div id="game" class="screen hidden">
+  <main class="shell game-shell">
+    <div class="topbar">
+      <div class="stat">⏱ זמן<span id="timer">0</span></div>
+      <div class="stat">⭐ ניקוד<span id="score">0</span></div>
+      <div class="stat">🎲 סיבוב<span id="round">0</span></div>
+      <div class="stat"><button class="button secondary" onclick="restartGame()">🔄 התחלה מחדש</button></div>
+    </div>
+    <section class="play-panel">
+      <div class="round-title" id="roundTitle">התאימו בין המושגים להגדרות</div>
+      <div class="help-bubble" id="helpBubble">בחרו הגדרה, ואז לחצו על המושג המתאים. אפשר גם לגרור במחשב.</div>
+      <div class="board">
+        <div class="column">
+          <h2>מושגים</h2>
+          <div id="zones" class="zones"></div>
+        </div>
+        <div class="column">
+          <h2>הגדרות</h2>
+          <div id="answers" class="answers"></div>
+        </div>
+      </div>
+      <div id="feedback" class="feedback hidden"></div>
+      <div class="actions">
+        <button id="checkBtn" class="button" onclick="checkAnswers()">בדוק תשובות</button>
+        <button id="nextBtn" class="button hidden" onclick="nextRound()">המשך לסיבוב הבא</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="result" class="screen hidden">
+  <main class="shell">
+    <section class="result-panel">
+      <h2>🎉 המשחק הסתיים</h2>
+      <div class="result-score" id="finalResult"></div>
+      <div class="rank" id="rank"></div>
+      <button class="button" onclick="location.reload()">🔄 משחק חדש</button>
+    </section>
+  </main>
+</div>
+
+<script>
+const terms = [
+ {term:"היקש",exp:"לומדים דין ממצווה סמוכה בפסוק."},
+ {term:"בנין אב",exp:"דין ממקרה אחד מועבר לדומים לו."},
+ {term:"גזירה שווה",exp:"לימוד בגלל מילה זהה."},
+ {term:"קל וחומר",exp:"לימוד מקל לחמור."},
+ {term:"דאורייתא",exp:"דין מן התורה."},
+ {term:"דרבנן",exp:"תקנה של חכמים."},
+ {term:"לכתחילה",exp:"הדרך הראויה."},
+ {term:"דיעבד",exp:"לאחר שכבר נעשה."},
+ {term:"אסמכתא",exp:"פסוק כרמז בלבד."},
+ {term:"גזרת הכתוב",exp:"דין ללא טעם ידוע."},
+ {term:"מחלוקת",exp:"חילוקי דעות."},
+ {term:"פשט ודרש",exp:"פשט פשוט, דרש עמוק."}
+];
+
+let level,totalRounds,currentRound=0,score=0,timeLeft=0,matchCount,timerInterval;
+let selectedAnswerId=null;
+let checked=false;
+
+function shuffle(arr){ return [...arr].sort(()=>0.5-Math.random()); }
+function $(id){ return document.getElementById(id); }
+
+function startGame(lvl){
+  level=lvl; currentRound=0; score=0; checked=false;
+  if(lvl==="easy"){matchCount=2;totalRounds=8;timeLeft=210;}
+  if(lvl==="medium"){matchCount=3;totalRounds=7;timeLeft=240;}
+  if(lvl==="hard"){matchCount=4;totalRounds=6;timeLeft=300;}
+  $("menu").classList.add("hidden");
+  $("game").classList.remove("hidden");
+  $("score").innerText=score;
+  startTimer();
+  nextRound();
+}
+
+function startTimer(){
+  $("timer").innerText=timeLeft;
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    $("timer").innerText=timeLeft;
+    if(timeLeft<=0) endGame();
+  },1000);
+}
+
+function nextRound(){
+  if(currentRound>=totalRounds){endGame();return;}
+  currentRound++;
+  checked=false;
+  selectedAnswerId=null;
+  $("round").innerText=currentRound+" / "+totalRounds;
+  $("feedback").classList.add("hidden");
+  $("feedback").innerHTML="";
+  $("checkBtn").classList.remove("hidden");
+  $("nextBtn").classList.add("hidden");
+  renderRound();
+}
+
+function renderRound(){
+  const zones=$("zones"), answers=$("answers");
+  zones.innerHTML=""; answers.innerHTML="";
+  const selected=shuffle(terms).slice(0,matchCount);
+  selected.forEach((t,i)=>{
+    const zone=document.createElement("div");
+    zone.className="drop-zone";
+    zone.dataset.correct=t.exp;
+    zone.dataset.term=t.term;
+    zone.dataset.answerId="";
+    zone.innerHTML='<span class="term-label">'+t.term+'</span>';
+    zone.ondragover=e=>e.preventDefault();
+    zone.ondrop=e=>{
+      e.preventDefault();
+      if(checked) return;
+      assignAnswer(e.dataTransfer.getData("text"), zone);
+    };
+    zone.onclick=()=>{
+      if(checked) return;
+      if(selectedAnswerId) assignAnswer(selectedAnswerId, zone);
+      else selectZone(zone);
+    };
+    zones.appendChild(zone);
+  });
+  shuffle(selected).forEach((t,i)=>{
+    const div=document.createElement("div");
+    div.className="answer-card";
+    div.innerText=t.exp;
+    div.id="ans"+currentRound+"_"+i;
+    div.draggable=true;
+    div.ondragstart=e=>e.dataTransfer.setData("text",div.id);
+    div.onclick=()=>{
+      if(checked) return;
+      selectAnswer(div.id);
+    };
+    answers.appendChild(div);
+  });
+}
+
+function selectAnswer(id){
+  selectedAnswerId=id;
+  document.querySelectorAll('.answer-card').forEach(a=>a.classList.remove('selected'));
+  const el=$(id); if(el) el.classList.add('selected');
+  $("helpBubble").innerText="מצוין. עכשיו לחצו על המושג שאליו שייכת ההגדרה שבחרתם.";
+}
+
+function selectZone(zone){
+  document.querySelectorAll('.drop-zone').forEach(z=>z.classList.remove('selected'));
+  zone.classList.add('selected');
+  $("helpBubble").innerText="בחרתם מושג. עכשיו לחצו על הגדרה כדי לשבץ אותה כאן.";
+}
+
+function assignAnswer(answerId, zone){
+  const ans=$(answerId);
+  if(!ans) return;
+  const oldAnswerId=zone.dataset.answerId;
+  if(oldAnswerId && $(oldAnswerId)) $(oldAnswerId).classList.remove('used');
+  document.querySelectorAll('.drop-zone').forEach(z=>{
+    if(z.dataset.answerId===answerId){
+      z.dataset.answerId="";
+      z.classList.remove('has-answer');
+      z.innerHTML='<span class="term-label">'+z.dataset.term+'</span>';
+    }
+  });
+  zone.dataset.answerId=answerId;
+  zone.classList.add('has-answer');
+  zone.classList.remove('selected');
+  zone.innerHTML='<span class="term-label">'+zone.dataset.term+'</span><span class="placed-answer">'+ans.innerText+'</span>';
+  ans.classList.add('used');
+  ans.classList.remove('selected');
+  selectedAnswerId=null;
+  $("helpBubble").innerText="אפשר לשנות בחירה עד שלוחצים על בדיקת תשובות.";
+}
+
+function checkAnswers(){
+  checked=true;
+  let correctCount=0;
+  let fb=[];
+  document.querySelectorAll('.drop-zone').forEach(z=>{
+    const ansId=z.dataset.answerId;
+    const ans=ansId ? $(ansId) : null;
+    const chosen=ans ? ans.innerText : "לא שובצה תשובה";
+    const ok=ans && chosen===z.dataset.correct;
+    if(ok){ correctCount++; if(ans) ans.classList.add('correct'); }
+    else { if(ans) ans.classList.add('incorrect'); }
+    fb.push((ok?"✅":"❌")+" <strong>"+z.dataset.term+"</strong>: התשובה הנכונה היא — "+z.dataset.correct);
+  });
+  score+=correctCount*100+Math.floor(timeLeft/10);
+  $("score").innerText=score;
+  $("feedback").innerHTML=fb.join("<br>");
+  $("feedback").classList.remove("hidden");
+  $("checkBtn").classList.add("hidden");
+  $("nextBtn").classList.remove("hidden");
+  $("helpBubble").innerText="בדקנו את הסיבוב. למטה מופיעות התשובות הנכונות.";
+  if(currentRound>=totalRounds){ $("nextBtn").innerText="סיום המשחק"; } else { $("nextBtn").innerText="המשך לסיבוב הבא"; }
+}
+
+function endGame(){
+  clearInterval(timerInterval);
+  $("game").classList.add("hidden");
+  $("result").classList.remove("hidden");
+  const max=totalRounds*matchCount*100;
+  const percent=Math.min(100,Math.round((score/max)*100));
+  let rank="💪 צריך עוד אימון";
+  if(percent>80) rank="🔥 אלוף הגמרא!";
+  else if(percent>60) rank="📚 בדרך הנכונה";
+  $("finalResult").innerHTML="ניקוד: <strong>"+score+"</strong><br>אחוז הצלחה: <strong>"+percent+"%</strong>";
+  $("rank").innerText=rank;
+}
+
+function restartGame(){
+  clearInterval(timerInterval);
+  startGame(level);
+}
+</script>
+<input type='hidden' name='ntsp_block_page' value='https://m.safepage.neto.net.il/?a=block/block1&level=-15&url=http%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile_00000000dc3c720ab2493e93298e6ab6%26ts%3D493783%26p%3Dfs%26cid%3D1%26sig%3Dde25f86000a331f96ed19d7b7508165fda419418bf699d423b6efb7030dfd3e5%26v%3D0&user_id=1210318&sigid=b5f140e05f75f718763aaa323c30ed427b67b7d763cbfed43b823634689ffc82&startm=0&keyword=&referer=https%3A%2F%2Fchatgpt.com%2Fc%2F69f4593f-3cfc-83eb-8705-abff57dccfac&category=77&cause=Quiltingjs'/><input type='hidden' name='ntsp_is_etrog' value='0'/><input type='hidden' name='ntsp_url_category' value='77'/><input type='hidden' name='ntsp_quilting' value='3'/><input type='hidden' name='ntsp_media_level' value='-15'/><input type='hidden' name='ntsp_user_level' value='-15'/><input type='hidden' name='ntsp_url_level' value='20'/><input type='hidden' name='ntsp_block_wa_status' value='0'/><script src='/jsQuilting/server/jsDict_utf8.js?v=1&k=23898278c1850f536d688db3614128a0' type='text/javascript' defer></script></body>
+</html>
